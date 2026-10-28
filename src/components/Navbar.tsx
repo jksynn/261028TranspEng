@@ -7,6 +7,7 @@ const links = [
   { to: '/research', label: '연구 자료' },
   { to: '/lectures', label: '강의 자료' },
   { to: '/discussions', label: '토론' },
+  { to: '/questions', label: '질문게시판' },
   { to: '/about', label: '소개' },
 ]
 

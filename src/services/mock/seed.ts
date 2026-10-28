@@ -61,10 +61,12 @@ export const seedPosts = (): Post[] => [
   { id: 'p1', researchId: 'r1', title: '감응식 제어의 포화 상태 성능이 궁금합니다', content: '교통량이 많은 첨두시간에는 감응식 제어의 이점이 줄어드는 것으로 보이는데, 포화 상태에서의 결과도 따로 분석해 보면 어떨까요?', authorId: 'mock-member', authorName: '김대학원 (임시)', createdAt: '2026-10-20T10:00:00.000Z' },
   { id: 'p2', researchId: 'r3', title: '사고 자료 전처리 기준 공유', content: '좌표 누락 건을 제외했는데 기준을 통일하면 좋겠습니다. 다들 어떻게 처리하셨나요?', authorId: 'seed-member-2', authorName: '이연구 (예시)', createdAt: '2026-10-22T14:30:00.000Z' },
   { id: 'p3', title: '이번 학기 세미나 일정 논의', content: '격주 목요일 오후에 진행하면 어떨까요? 가능한 시간대를 댓글로 남겨 주세요.', authorId: 'mock-admin', authorName: '홍길동 교수 (임시)', createdAt: '2026-10-25T09:00:00.000Z' },
+  { id: 'p4', board: 'question', title: '교통량 조사 자료는 어디서 구할 수 있나요?', content: '석사 논문 실험용으로 지방부 국도의 교통량 자료가 필요합니다. 공개된 자료 출처를 알려 주세요.', authorId: 'seed-member-2', authorName: '이연구 (예시)', createdAt: '2026-10-26T09:00:00.000Z' },
 ]
 
 export const seedComments = (): Comment[] => [
   { id: 'c1', postId: 'p1', content: '좋은 지적입니다. 포화도별로 구간을 나눠 비교표를 만들어 보겠습니다.', authorId: 'mock-admin', authorName: '홍길동 교수 (임시)', createdAt: '2026-10-21T09:00:00.000Z' },
   { id: 'c2', postId: 'p2', content: '저는 좌표 누락 건을 주소로 보정해서 사용했습니다.', authorId: 'mock-member', authorName: '김대학원 (임시)', createdAt: '2026-10-23T08:00:00.000Z' },
   { id: 'c3', postId: 'p3', content: '목요일 오후 3시 이후가 좋습니다.', authorId: 'mock-member', authorName: '김대학원 (임시)', createdAt: '2026-10-25T11:00:00.000Z' },
+  { id: 'c4', postId: 'p4', content: '국가교통DB와 도로교통량 통계연보를 먼저 확인해 보세요. 필요한 구간이 없으면 연구실 자료를 공유하겠습니다.', authorId: 'mock-admin', authorName: '홍길동 교수 (임시)', createdAt: '2026-10-26T13:00:00.000Z' },
 ]

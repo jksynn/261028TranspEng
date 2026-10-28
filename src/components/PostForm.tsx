@@ -3,11 +3,12 @@ import { useState, type FormEvent } from 'react'
 interface Props {
   initial?: { title: string; content: string }
   submitLabel?: string
+  label?: string
   onSubmit: (data: { title: string; content: string }) => Promise<void>
   onCancel: () => void
 }
 
-export default function PostForm({ initial, submitLabel = '등록', onSubmit, onCancel }: Props) {
+export default function PostForm({ initial, submitLabel = '등록', label = '토론 글 작성', onSubmit, onCancel }: Props) {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [content, setContent] = useState(initial?.content ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +30,7 @@ export default function PostForm({ initial, submitLabel = '등록', onSubmit, on
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card mb-4 space-y-3" aria-label="토론 글 작성">
+    <form onSubmit={handleSubmit} className="card mb-4 space-y-3" aria-label={label}>
       <div>
         <label htmlFor="post-title" className="label">제목 *</label>
         <input id="post-title" className="input" value={title} onChange={(e) => setTitle(e.target.value)} />

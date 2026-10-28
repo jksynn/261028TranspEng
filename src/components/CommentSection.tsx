@@ -6,7 +6,7 @@ import { formatDate } from '../utils/format'
 import Loading from './Loading'
 import ErrorMessage from './ErrorMessage'
 
-export default function CommentSection({ postId }: { postId: string }) {
+export default function CommentSection({ postId, noun = '댓글' }: { postId: string; noun?: string }) {
   const { user, role } = useAuth()
   const { data, loading, error, reload } = useAsync(() => commentService.listByPost(postId), [postId])
   const [content, setContent] = useState('')
@@ -16,7 +16,7 @@ export default function CommentSection({ postId }: { postId: string }) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!user) return
-    if (!content.trim()) return setFormError('댓글 내용을 입력해 주세요.')
+    if (!content.trim()) return setFormError(`${noun} 내용을 입력해 주세요.`)
     setFormError(null)
     setSaving(true)
     try {
@@ -24,14 +24,14 @@ export default function CommentSection({ postId }: { postId: string }) {
       setContent('')
       reload()
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : '댓글 저장에 실패했습니다.')
+      setFormError(err instanceof Error ? err.message : `${noun} 저장에 실패했습니다.`)
     } finally {
       setSaving(false)
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('댓글을 삭제할까요?')) return
+    if (!window.confirm(`${noun}을(를) 삭제할까요?`)) return
     try {
       await commentService.remove(id)
       reload()
@@ -41,10 +41,10 @@ export default function CommentSection({ postId }: { postId: string }) {
   }
 
   return (
-    <section aria-label="댓글" className="mt-4 border-t border-slate-100 pt-3">
-      {loading && !data && <Loading text="댓글 불러오는 중..." />}
+    <section aria-label={noun} className="mt-4 border-t border-slate-100 pt-3">
+      {loading && !data && <Loading text={`${noun} 불러오는 중...`} />}
       {error && <ErrorMessage message={error} onRetry={reload} />}
-      {data && data.length === 0 && <p className="text-sm text-slate-600">아직 댓글이 없습니다.</p>}
+      {data && data.length === 0 && <p className="text-sm text-slate-600">아직 {noun}이(가) 없습니다.</p>}
       <ul className="space-y-3">
         {data?.map((c) => (
           <li key={c.id} className="rounded-md bg-slate-50 p-3 text-sm">
@@ -57,10 +57,10 @@ export default function CommentSection({ postId }: { postId: string }) {
         ))}
       </ul>
       <form onSubmit={handleSubmit} className="mt-3">
-        <label htmlFor={`comment-${postId}`} className="label">댓글 쓰기</label>
+        <label htmlFor={`comment-${postId}`} className="label">{noun} 쓰기</label>
         <textarea id={`comment-${postId}`} rows={2} className="input" value={content} onChange={(e) => setContent(e.target.value)} />
         {formError && <p role="alert" className="mt-1 text-sm text-red-700">{formError}</p>}
-        <button type="submit" className="btn-primary mt-2" disabled={saving}>{saving ? '등록 중...' : '댓글 등록'}</button>
+        <button type="submit" className="btn-primary mt-2" disabled={saving}>{saving ? '등록 중...' : `${noun} 등록`}</button>
       </form>
     </section>
   )

@@ -43,6 +43,8 @@ export interface Lecture {
 export interface Post {
   id: string
   researchId?: string
+  /** 'question'이면 질문게시판 글, 없으면 토론 글 */
+  board?: 'question'
   title: string
   content: string
   authorId: string

@@ -1,3 +1,4 @@
+import QuestionsPage from './pages/QuestionsPage'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/research/:id" element={<ResearchDetailPage />} />
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/discussions" element={<DiscussionsPage />} />
+        <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />

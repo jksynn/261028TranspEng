@@ -19,12 +19,13 @@ export default function PostItem({ post, researchTitle, onChanged }: Props) {
   const [editing, setEditing] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const isQuestion = post.board === 'question'
   const isOwner = user?.id === post.authorId
   const canEdit = isOwner // 본인 글만 수정
   const canDelete = isOwner || role === 'admin' // 관리자는 모든 글 삭제 가능
 
   const handleDelete = async () => {
-    if (!window.confirm('이 글을 삭제할까요? 달린 댓글도 함께 삭제됩니다.')) return
+    if (!window.confirm('이 글을 삭제할까요? 달린 댓글·답변도 함께 삭제됩니다.')) return
     try {
       await postService.remove(post.id)
       onChanged()
@@ -38,6 +39,7 @@ export default function PostItem({ post, researchTitle, onChanged }: Props) {
       <PostForm
         initial={{ title: post.title, content: post.content }}
         submitLabel="수정 완료"
+        label={isQuestion ? '질문 수정' : '토론 글 수정'}
         onCancel={() => setEditing(false)}
         onSubmit={async (data) => {
           await postService.update(post.id, data)
@@ -59,12 +61,12 @@ export default function PostItem({ post, researchTitle, onChanged }: Props) {
       {error && <p role="alert" className="mt-2 text-sm text-red-700">{error}</p>}
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" className="btn-outline" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-          {open ? '댓글 접기' : '댓글 보기'}
+          {isQuestion ? (open ? '답변 접기' : '답변 보기') : (open ? '댓글 접기' : '댓글 보기')}
         </button>
         {canEdit && <button type="button" className="btn-outline" onClick={() => setEditing(true)}>수정</button>}
         {canDelete && <button type="button" className="btn-danger" onClick={handleDelete}>삭제</button>}
       </div>
-      {open && <CommentSection postId={post.id} />}
+      {open && <CommentSection postId={post.id} noun={isQuestion ? '답변' : '댓글'} />}
     </article>
   )
 }

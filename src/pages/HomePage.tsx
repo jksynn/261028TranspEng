@@ -13,7 +13,7 @@ export default function HomePage() {
   const { role } = useAuth()
   const canRead = role !== 'visitor'
   const research = useAsync(async () => (await researchService.list()).slice(0, 3), [])
-  const posts = useAsync(async () => (canRead ? (await postService.list()).slice(0, 3) : []), [canRead])
+  const posts = useAsync(async () => (canRead ? (await postService.list()).filter((p) => p.board !== 'question').slice(0, 3) : []), [canRead])
 
   return (
     <div className="space-y-12">
