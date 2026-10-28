@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function role() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : 'visitor';
+    }
+    function isAdmin() { return role() == 'admin'; }
+    function isMember() { return role() == 'member' || role() == 'admin'; }
+
+    // 사용자: 본인 문서는 만들 수 있지만 역할은 항상 visitor. 역할 변경은 관리자(또는 콘솔)만.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.role == 'visitor';
+      allow update: if isAdmin()
+        || (signedIn() && request.auth.uid == uid && request.resource.data.role == resource.data.role);
+    }
+
+    // 연구·강의: 누구나 읽기, 관리자만 쓰기
+    match /research/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /lectures/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 토론 글: 멤버만 읽기/쓰기, 본인 글만 수정, 본인 또는 관리자만 삭제
+    match /posts/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && request.resource.data.authorId == request.auth.uid;
+      allow update: if isMember() && resource.data.authorId == request.auth.uid
+        && request.resource.data.authorId == resource.data.authorId;
+      allow delete: if isMember() && (resource.data.authorId == request.auth.uid || isAdmin());
+    }
+
+    // 댓글: 멤버만 읽기/쓰기, 작성자·글 작성자·관리자만 삭제
+    match /comments/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && request.resource.data.authorId == request.auth.uid;
+      allow delete: if isMember() && (resource.data.authorId == request.auth.uid || isAdmin()
+        || get(/databases/$(database)/documents/posts/$(resource.data.postId)).data.authorId == request.auth.uid);
+    }
+  }
+}

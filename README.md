@@ -67,21 +67,19 @@ git push -u origin main
 4. **Deploy** 를 누르면 `https://○○○.netlify.app` 주소가 생깁니다.
 5. 이후 GitHub에 `git push` 할 때마다 자동으로 다시 배포됩니다.
 
-## 4. 다음 단계: Firebase 연동 시 할 일 체크리스트
+## 4. Firebase 연동 (코드 작업은 완료됨)
 
-무료(Spark) 요금제에서 가능한 범위만 사용합니다. 파일 업로드(Storage)는 쓰지 않고 링크만 사용합니다.
+코드는 이미 Firebase용으로 준비되어 있습니다. 설정값(`VITE_FIREBASE_*`)이 있으면 Firebase를, 없으면 임시(localStorage) 구현을 자동으로 씁니다.
 
-- [ ] [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 생성 (Google Analytics는 꺼도 됩니다)
-- [ ] 웹 앱 등록 후 나오는 설정값(apiKey 등) 확인
-- [ ] Authentication → Sign-in method → **Google** 사용 설정
-- [ ] Firestore Database 생성 (프로덕션 모드로 시작, 위치는 가까운 곳)
-- [ ] Firestore 보안 규칙 작성 (멤버만 토론 읽기/쓰기, 관리자만 자료 쓰기 — Claude Code에게 요청하세요)
-- [ ] 로컬 `.env` 파일 만들기: `.env.example` 을 복사해 값 채우기
-- [ ] Netlify → Site configuration → Environment variables 에 `VITE_FIREBASE_*` 값 등록 후 재배포
-- [ ] Firebase → Authentication → Settings → **승인된 도메인**에 Netlify 주소(`○○○.netlify.app`) 추가
-- [ ] `src/services/firebase/` 에 구현체 작성 후 `src/services/index.ts` 의 import 한 줄 교체
-- [ ] 로그인 사용자의 역할(member/admin)을 Firestore에 저장하는 방식 정하기 (예: 교수 이메일은 admin)
-- [ ] `src/components/DevRoleSwitcher.tsx` 와 `Layout.tsx` 의 `<DevRoleSwitcher />` 한 줄 삭제
+- [x] Firebase 프로젝트 생성, 구글 로그인 활성화, 승인된 도메인에 Netlify 주소 추가
+- [ ] Firestore Database 만들기 (Firebase 콘솔 → Firestore Database → 데이터베이스 만들기)
+- [ ] 보안 규칙 적용: 콘솔 → Firestore → 규칙 탭에 `firestore.rules` 파일 내용을 붙여넣고 **게시**
+- [ ] 내 컴퓨터: `.env.example` 을 복사해 `.env` 로 만들고 값 채우기 (이미 채워져 있으면 생략)
+- [ ] Netlify → Site configuration → Environment variables 에 `VITE_FIREBASE_*` 6개 값 등록 후 재배포
+- [ ] **교수님 계정을 관리자로 지정**: 사이트에서 구글 로그인을 한 번 한 뒤, 콘솔 → Firestore → `users` 컬렉션 → 내 문서의 `role` 값을 `admin` 으로 수정
+- [ ] 대학원생 승인: 학생이 로그인하면 `users` 에 `role: visitor` 로 생깁니다. 토론 참여를 허용하려면 `role` 을 `member` 로 수정
+- [ ] 관리자로 로그인해 연구·강의 자료를 등록 (Firestore는 처음엔 비어 있습니다)
+- [ ] `DevRoleSwitcher`는 Firebase 사용 시 자동으로 숨겨집니다. 완전히 지우려면 `Layout.tsx` 의 `<DevRoleSwitcher />` 한 줄 삭제
 
 ## 폴더 구조
 

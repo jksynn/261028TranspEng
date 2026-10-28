@@ -1,9 +1,13 @@
 // ★ 구현체를 바꾸는 유일한 곳 ★
-// Firebase 연동 시: './firebase' 에서 같은 이름으로 내보내고 아래 import 경로만 바꾸세요.
+// Firebase 설정값(.env 또는 Netlify 환경변수)이 있으면 Firebase를, 없으면 임시(localStorage) 구현을 씁니다.
 import type {
   AuthService, CommentService, LectureService, PostService, ResearchService,
 } from './types'
-import * as impl from './mock'
+import * as mock from './mock'
+import * as firebase from './firebase'
+
+export const useFirebase = Boolean(import.meta.env.VITE_FIREBASE_API_KEY)
+const impl = useFirebase ? firebase : mock
 
 export const authService: AuthService = impl.authService
 export const researchService: ResearchService = impl.researchService
