@@ -1,3 +1,4 @@
+import AdminMembersPage from './pages/AdminMembersPage'
 import QuestionsPage from './pages/QuestionsPage'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/discussions" element={<DiscussionsPage />} />
         <Route path="/questions" element={<QuestionsPage />} />
+        <Route path="/admin/members" element={<AdminMembersPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />

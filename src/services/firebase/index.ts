@@ -6,7 +6,7 @@ import {
   addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, writeBatch,
 } from 'firebase/firestore'
 import type {
-  AuthService, CommentService, LectureService, PostService, ResearchService,
+  AuthService, CommentService, LectureService, PostService, ResearchService, UserService,
 } from '../types'
 import type { Comment, Lecture, Post, Research, Role, User } from '../../types'
 import { auth, db } from './config'
@@ -143,4 +143,16 @@ export const commentService: CommentService = {
     return withId<Comment>(ref.id, data)
   },
   async remove(id) { await deleteDoc(doc(db, 'comments', id)) },
+}
+
+// ---------- 사용자 관리 (관리자 전용, 보안 규칙이 관리자만 허용) ----------
+export const userService: UserService = {
+  async list() {
+    const snap = await getDocs(collection(db, 'users'))
+    return snap.docs.map((d) => {
+      const x = d.data()
+      return { id: d.id, name: x.name ?? '', email: x.email ?? '', photoURL: x.photoURL ?? null, role: (x.role as Role) ?? 'visitor' }
+    })
+  },
+  async setRole(id, role) { await updateDoc(doc(db, 'users', id), { role }) },
 }

@@ -16,6 +16,13 @@ export interface AuthService {
   devSetRole?(role: Role): Promise<void>
 }
 
+export interface UserService {
+  /** 관리자 전용: 가입한 모든 사용자 */
+  list(): Promise<User[]>
+  /** 관리자 전용: 역할 변경 */
+  setRole(id: string, role: Role): Promise<void>
+}
+
 export interface ResearchService {
   list(): Promise<Research[]>
   get(id: string): Promise<Research | null>

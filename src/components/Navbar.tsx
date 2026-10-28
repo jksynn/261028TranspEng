@@ -13,7 +13,8 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const { user, signOut, loading } = useAuth()
+  const { user, role, signOut, loading } = useAuth()
+  const menu = role === 'admin' ? [...links, { to: '/admin/members', label: '멤버 관리' }] : links
   const navigate = useNavigate()
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -41,7 +42,7 @@ export default function Navbar() {
         </button>
 
         <div className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
+          {menu.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>{l.label}</NavLink>
           ))}
           <AuthButtons />
@@ -50,7 +51,7 @@ export default function Navbar() {
 
       {open && (
         <div id="mobile-menu" className="border-t border-slate-200 px-4 pb-3 md:hidden">
-          {links.map((l) => (
+          {menu.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={linkClass} onClick={() => setOpen(false)}>{l.label}</NavLink>
           ))}
           <div className="mt-2 border-t border-slate-100 pt-2"><AuthButtons /></div>

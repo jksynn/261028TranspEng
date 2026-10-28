@@ -1,5 +1,5 @@
 import type {
-  AuthService, CommentService, LectureService, PostService, ResearchService,
+  AuthService, CommentService, LectureService, PostService, ResearchService, UserService,
 } from '../types'
 import type { Comment, Lecture, Post, Research, Role, User } from '../../types'
 import { delay, load, newId, save } from './storage'
@@ -134,5 +134,20 @@ export const commentService: CommentService = {
   async remove(id) {
     save(COMMENT_KEY, load<Comment[]>(COMMENT_KEY, seedComments).filter((c) => c.id !== id))
     return delay(undefined, 80)
+  },
+}
+
+// ---------- 사용자 관리 (임시: 예시 학생 몇 명) ----------
+const USERS_KEY = 'users'
+const seedUsers = (): User[] => [
+  MOCK_USERS.admin,
+  { id: 'seed-student-1', name: '박신입 (예시)', email: 'new1@example.com', photoURL: null, role: 'visitor' },
+  { id: 'seed-student-2', name: '최연구 (예시)', email: 'new2@example.com', photoURL: null, role: 'member' },
+]
+export const userService: UserService = {
+  async list() { return delay(load<User[]>(USERS_KEY, seedUsers)) },
+  async setRole(id, role) {
+    save(USERS_KEY, load<User[]>(USERS_KEY, seedUsers).map((u) => (u.id === id ? { ...u, role } : u)))
+    return delay(undefined)
   },
 }
